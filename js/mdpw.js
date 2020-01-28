@@ -9,6 +9,8 @@ var DURATION = 2;
 var POSITION = 2;
 var VELOCITY = 3;
 var INST = 4;
+const DRUM = 129;
+const DRUM_CHANNEL = 9; //channel:10 のインデックスは９
 function encodeValue(l,m){
  if(!m){ m = 0;}
 // alert(l);
@@ -83,6 +85,7 @@ function fillDefault(n, dn){
   return n;
 }
 /*配列をコンパイル前の内部配列にする
+　音の情報からonとoffを生成して並べる
   副作用でdwnがかわる */
 function precompileArray(dest, src,  pos, dwn){
 // alert("cA");
@@ -148,9 +151,8 @@ function insertNote(a, n, pos){
  }
 // alert(a.length);
 }
-//配列を楽器別に分類して、楽器別にチャンネルまたはトラックを作ってバイナリ化
 
-
+//配列を楽器別に分類して、楽器別にチャンネルを作り１５個まとめてトラックを作ってバイナリ化
 function compileArray(a){
   var r = new Array();
   //楽器別に分類
@@ -186,7 +188,7 @@ function compileArray(a){
       }
     }
     channel ++;
-    if(channel > 15){
+    if(channel > 14){
       channel = 0;
       ctr = false;
     }
@@ -201,14 +203,19 @@ function compileArray(a){
     var insts = new Object();
     var instsi = 0;
     var dt = ""; var cp = 0;
+    //音色をチャンネルに割り振る
+    // TODO: ドラムを9chにその他は順次割り振る
+    insts[DRUM] = DRUM_CHANNEL;
    for(var j = 0; j < tr[i].length; j ++){
       var  del = Math.floor((tr[i][j][POSITION] -cp)*TICK);
       cp = tr[i][j][POSITION];
       if(!insts[tr[i][j][INST]]){
         insts[tr[i][j][INST]] = instsi.toString(16); //常に一桁のはず
-
         dt +=  '%00'+PCHANGE+insts[tr[i][j][INST]]+toHex2(tr[i][j][INST]&0x7f);
         instsi ++;
+        if(instsi == DRUM_CHANNEL){
+          instsi ++;
+        }
       }
       dt += encodeLength(del)+tr[i][j][TYPE]+insts[tr[i][j][INST]];
       dt += toHex2(tr[i][j][PITCH])+toHex2(tr[i][j][VELOCITY]);
@@ -238,4 +245,23 @@ function compileArrayString(s, tempo){
 //デバッグまだ
 //noteoffが複数の場合削る機能がまだ
 exports.compile = compileArrayString
+exports.toUint8Array = function(s){
+  var res  = new Array();
+  var resi = 0
+  var i = s.indexOf(",")+1;
+  while(i < s.length){
+    var si = s.charCodeAt(i);
+    if(si == "+".charCodeAt(0)){
+      si = " ".charCodeAt(0);
+    } else if(si == "%".charCodeAt(0)){
+      si = s.charAt(i+1)+s.charAt(i+2);
+      i++; i++;
+      si = parseInt(si, 16);
+    }
+    res[resi] = si
+    i++;
+    resi ++
+  }
+  return new Uint8Array(res)
+}
 
