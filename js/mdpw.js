@@ -187,11 +187,14 @@ function compileArray(a){
        ctr.push(c);
       }
     }
+    ctr = false;//1一楽器一トラック　一トラック複数楽器には対応していないプレイヤーがある
+    /*
     channel ++;
     if(channel > 14){
       channel = 0;
       ctr = false;
     }
+    */
    }
   }
 //  return tr;
