@@ -151,6 +151,29 @@ function insertNote(a, n, pos){
  }
 // alert(a.length);
 }
+function removeNoteoff(a){
+  var count = {}
+  var r = Array()
+  console.log(a)
+  for(var i = 0; i < a.length; i ++){
+    var ri = a[i]
+    console.log(ri)
+    if(ri[TYPE] == NON){
+      if(!count[ri[PITCH]]){
+        count[ri[PITCH]] = 0
+      }
+      count[ri[PITCH]] ++
+    } else if(ri[TYPE] == NOFF){
+      count[ri[PITCH]] --
+      if(count[ri[PITCH]] > 0){
+        ri = false
+      }
+    }
+    if(ri){
+      r.splice(r.length, 0, ri)
+    }
+  }
+}
 
 //配列を楽器別に分類して、楽器別にチャンネルを作り１５個まとめてトラックを作ってバイナリ化
 function compileArray(a){
@@ -237,6 +260,7 @@ function compileArrayString(s, tempo){
   var t = eval(s);
   var dest = new Array();
   precompileArray(dest, t);
+  dest = dest.map(removeNoteoff)
   dest = compileArray(dest);
   var tr = new Array();
   for(var j = 0; j < dest.length; j ++){
