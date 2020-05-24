@@ -1,7 +1,7 @@
 import copy
 import pretty_midi
 __copyright__    = 'Copyright (C) 2020 CyberWindBell Project'
-__version__      = '0.0.1'
+__version__      = '0.0.2'
 __license__      = 'MIT'
 __author__       = 'cwbp'
 __author_email__ = 'cwbp@cwbp.com'
