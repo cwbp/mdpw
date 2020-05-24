@@ -25,6 +25,7 @@ _on = "on"
 _off = "off"
 _delta = 0.0001
 
+#def _deep_copy(data):
 
 def add_start(data, start, defv):
         d = data
@@ -43,14 +44,18 @@ def add_start(data, start, defv):
             return float(d[_i_duration])
         if d[_i_type] == _c:
             ld = 0.0
-            for dd in d[1:]:
+            for ii in range(1, len(d)):
+                dd = copy.copy(d[ii])
+                d[ii] = dd
                 td = add_start(dd, start, defv)
                 if ld < td:
                     ld = td
             return ld
         if d[_i_type] == _s:
             ld = 0.0
-            for dd in d[1:]:
+            for ii in range(1, len(d)):
+                dd = copy.copy(d[ii])
+                d[ii] = dd
                 td = add_start(dd, start, defv)
                 start += td
                 ld += td
