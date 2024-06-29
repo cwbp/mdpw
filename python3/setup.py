@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+# python3 setup.py sdist; python3 setup.py bdist_wheel; 
+# twine upload --verbose --repository testpypi dist/*
 from setuptools import setup
 from codecs import open
 from os import path
@@ -60,9 +61,8 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Multimedia :: Sound/Audio :: MIDI',
     ],
 )

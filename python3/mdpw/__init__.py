@@ -3,7 +3,7 @@ import pretty_midi
 from .instruments import INSTRUMENTS
 from .drums import DRUMS
 __copyright__    = 'Copyright (C) 2020-2024 CyberWindBell Project'
-__version__      = '0.0.3.5'
+__version__      = '0.0.3'
 __license__      = 'MIT'
 __author__       = 'cwbp'
 __author_email__ = 'cwbp@cwbp.com'
