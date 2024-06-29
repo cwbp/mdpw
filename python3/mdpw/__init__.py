@@ -1,7 +1,9 @@
 import copy
 import pretty_midi
-__copyright__    = 'Copyright (C) 2020 CyberWindBell Project'
-__version__      = '0.0.2'
+from .instruments import INSTRUMENTS
+from .drums import DRUMS
+__copyright__    = 'Copyright (C) 2020-2024 CyberWindBell Project'
+__version__      = '0.0.3.5'
 __license__      = 'MIT'
 __author__       = 'cwbp'
 __author_email__ = 'cwbp@cwbp.com'
@@ -89,7 +91,7 @@ def remove_noteoff(track_data):
     pass
 def compile(data, tempo):
     ldata = copy.deepcopy(data)
-    d = add_start(ldata, 0.0, ['n', 64, 1, 64,1])
+    d = add_start(ldata, 0.0, ['n', 0, 0, 64,1])
     #print(ldata, tempo, d)
     ret = {}
     split_by_inst(ldata, ret)
@@ -98,11 +100,35 @@ def compile(data, tempo):
     for inst in ret:
         i = inst if inst < 129 else 0
         track = pretty_midi.Instrument(program=i, is_drum=(inst==129))
+        em = {} #key _i_start, _i_pitch
+        lm = {} #key _i_pitch
+        for n in ret[inst]:
+            st = n[_i_start]*60/tempo
+            dt = n[_i_duration]*60/tempo-_delta
+            et = st+dt
+            if n[_i_pitch] in lm and lm[n[_i_pitch]] > et:
+                et = lm[n[_i_pitch]]
+            else:
+                lm[n[_i_pitch]] = et
+            if not st in em:
+                em[st] = {}
+            if not n[_i_pitch] in em[st] or em[st][n[_i_pitch]] < et:
+                em[st][n[_i_pitch]] = et
+            else:
+                 em[st][n[_i_pitch]] = max(em[st][n[_i_pitch]], et) 
         for n in ret[inst]:
                 st = n[_i_start]*60/tempo
                 dt = n[_i_duration]*60/tempo-_delta
-                track.notes.append(pretty_midi.Note(
-                    pitch = n[_i_pitch], velocity=n[_i_velocity], start = st, end = st+dt
-                ))
+                #print(st, n[_i_pitch], em[st], em[st][n[_i_pitch]])
+                if n[_i_velocity] > 0:
+                    track.notes.append(pretty_midi.Note(
+                        pitch = n[_i_pitch], velocity=n[_i_velocity], start = st, end = em[st][n[_i_pitch]]
+                    ))
         mfile.instruments.append(track)
     return mfile
+def note(*args):
+     return ['n'] + list(args)
+def seq(*args):
+     return ['s']+ list(args)
+def chord(*args):
+    return ['c']+ list(args)
