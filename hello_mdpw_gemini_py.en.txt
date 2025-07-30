@@ -1,8 +1,3 @@
-# mdpw
-
-# mdpw is library for create midi file from list data. You can manipulate easily music because it is represented in list. To describe how to use mdpw, I will show you a script for AI that ask it to make a midifile
-
-```
 Please create a Python virtual environment (venv) here and install the mdpw package.
 Here is an example of how to use mdpw:
 
@@ -31,5 +26,3 @@ r indicates a rest.
 
 Install pygame so that I can play MIDI files from the command line.
 And play the generated MIDI file using pygame.
-```
-
