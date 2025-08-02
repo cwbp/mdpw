@@ -1,28 +1,32 @@
-Please create a Python virtual environment (venv) here and install the mdpw package.
-Here is an example of how to use mdpw:
+Please create a venv environment here and install mdpw.
 
+An example of how to use mdpw is as follows:
+```python
 import mdpw
-a = ['s', ['n', 64, 1, 64, 1], ['n', 68, 1, 64, 1], ['n', 71, 1, 64, 1],
-         ['c', ['n', 64, 1, 64, 1], ['n', 68, 1, 64, 1], ['n', 71, 1, 64, 1]],
-         ['c', ['s', ['n', 64, 1, 64, 1], ['n', 68, 1, 64, 1], ['n', 71, 1, 64, 1],
-              ['s', ['n', 68, 2, 64], ['n', 71], ['n', 75]]]]]
+a = ['s',['n',64,1,64,1],['n',68,1,64,1],['n',71,1,64,1],
+         ['c',['n',64,1,64,1],['n',68,1,64,1],['n',71,1,64,1]],
+         ['c',['s',['n',64,1,64,1],['n',68,1,64,1],['n',71,1,64,1],
+              ['s',['n',68,2,64],['n',71],['n',75]]]]]
 mdpw.compile(a, 120).write("hello.mid")
-The array must start with one of the following: 'n', 's', or 'c'.
-Arrays starting with 'n' represent a note. The next values are pitch, duration, and velocity.
-If duration or velocity is omitted, the most recent value is reused.
-Rests are represented as notes with velocity 0.
-Arrays starting with 's' represent a sequence start.
-Arrays starting with 'c' represent chords. Chords can be nested.
-mdpw.compile(a, 120) generates a MIDI file at 120 BPM.
-.write("hello.mid") saves it to a file.
+```
 
-Please create a script that generates the melody:
-"c-cdeeg-eeddc-r-"
+The beginning of an array must be 'n', 's', or 'c'.
+An array starting with 'n' represents a note, followed by pitch, duration, velocity, and timbre. If values after duration are omitted, the values from the previous note are used. Rests are represented as notes with velocity 0.
+An array starting with 's' represents playing in sequence. This array can be nested.
+An array starting with 'c' represents playing simultaneously. This array can be nested too.
+`mdpw.compile(a, 120)` generates a MIDI file at 120 bpm.
+`write("hello.mid")` saves it to a file.
 
-In this melody:
-Notes followed by - are of duration 1.
-Notes without - are of duration 0.5.
-r indicates a rest.
+Please install pygame to the venv so that MIDI files can be played from the command line with Python.
 
-Install pygame so that I can play MIDI files from the command line.
-And play the generated MIDI file using pygame.
+Please create a melody of "CDEFEDCN" and call it Melody A. "N" is a rest. Please create a MIDI file for Melody A and play it.
+
+Please raise all "C D E F" of Melody A to "E F G A" respectively and call it Melody B. Please create a MIDI file for Melody B and play it.
+
+Melody C is "C-C-C-C-". "-" means the duration is 2. Please create a MIDI file for Melody C and play it.
+
+Please change the notes of Melody A up to "F" from quarter notes to two eighth notes, leaving the rest unchanged, and call it Melody D. Please create a MIDI file for Melody D and play it.
+
+Connecting Melody A, Melody B, Melody C, and Melody D will be the entire melody. Please create a MIDI file for the entire melody and play it.
+
+Please create a three-part round of the entire melody, shifted by the length of Melody A, create a MIDI file, and play it.
